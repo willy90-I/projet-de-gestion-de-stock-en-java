@@ -6,52 +6,30 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DBConnection {
-    private static final String URL = "jdbc:sqlite:gestion_vols.db";
-    private static Connection conn = null;
+    private static final String URL = "jdbc:sqlite:voyages.db";
 
-    public static Connection getConnection() throws SQLException {
-        if (conn == null || conn.isClosed()) { // réouvre si fermé
-            try {
-                Class.forName("org.sqlite.JDBC"); // charge le driver
-            } catch (ClassNotFoundException e) {
-                System.err.println("Driver SQLite introuvable !");
-                throw new SQLException(e);
-            }
-
-            conn = DriverManager.getConnection(URL);
-            createTables(conn);
+    static {
+        try {
+            Class.forName("org.sqlite.JDBC");
+            initializeDatabase();
+        } catch (Exception e) {
+            System.err.println("Erreur initialisation JDBC: " + e.getMessage());
         }
-        return conn;
     }
 
-    private static void createTables(Connection c) throws SQLException {
-        String sqlVols = "CREATE TABLE IF NOT EXISTS vols (" +
-                "numero_vol TEXT PRIMARY KEY," +
-                "destination TEXT NOT NULL," +
-                "date_depart TEXT NOT NULL," +
-                "heure_depart TEXT NOT NULL," +
-                "heure_arrivee TEXT NOT NULL," +
-                "capacite INTEGER DEFAULT 150);";
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL);
+    }
 
-        String sqlPassagers = "CREATE TABLE IF NOT EXISTS passagers (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "nom TEXT NOT NULL," +
-                "email TEXT," +
-                "numero_passeport TEXT);";
-
-        String sqlReservations = "CREATE TABLE IF NOT EXISTS reservations (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "numero_vol TEXT NOT NULL," +
-                "passager_id INTEGER NOT NULL," +
-                "statut TEXT NOT NULL," +
-                "date_reservation TEXT NOT NULL," +
-                "FOREIGN KEY(numero_vol) REFERENCES vols(numero_vol)," +
-                "FOREIGN KEY(passager_id) REFERENCES passagers(id));";
-
-        try (Statement st = c.createStatement()) {
-            st.execute(sqlVols);
-            st.execute(sqlPassagers);
-            st.execute(sqlReservations);
+    private static void initializeDatabase() {
+        try (Connection c = getConnection(); Statement st = c.createStatement()) {
+            // tables
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS vols (id INTEGER PRIMARY KEY AUTOINCREMENT, numero TEXT, destination TEXT, depart TEXT, arrivee TEXT, capacite INTEGER, placesReservees INTEGER DEFAULT 0)");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS passagers (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, email TEXT, passport TEXT)");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS reservations (id INTEGER PRIMARY KEY AUTOINCREMENT, volId INTEGER, passagerId INTEGER, statut TEXT, FOREIGN KEY(volId) REFERENCES vols(id), FOREIGN KEY(passagerId) REFERENCES passagers(id))");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS agences (id INTEGER PRIMARY KEY AUTOINCREMENT, nom TEXT, contact TEXT, offres TEXT)");
+        } catch (SQLException e) {
+            System.err.println("Erreur création tables: " + e.getMessage());
         }
     }
 }

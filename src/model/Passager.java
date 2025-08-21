@@ -1,34 +1,27 @@
 package model;
 
 public class Passager {
-    private int id;
+    private long id;
     private String nom;
     private String email;
-    private String numeroPasseport;
+    private String passport;
 
-    public Passager(int id, String nom, String email, String numeroPasseport) {
-        this.id = id;
-        this.nom = nom;
-        this.email = email;
-        this.numeroPasseport = numeroPasseport;
+    public Passager() {}
+    public Passager(long id, String nom, String email, String passport) {
+        this.id = id; this.nom = nom; this.email = email; this.passport = passport;
     }
 
-    public Passager(String nom, String email, String numeroPasseport) {
-        this(0, nom, email, numeroPasseport);
-    }
-
-    // getters & setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public long getId() { return id; }
+    public void setId(long id) { this.id = id; }
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-    public String getNumeroPasseport() { return numeroPasseport; }
-    public void setNumeroPasseport(String numeroPasseport) { this.numeroPasseport = numeroPasseport; }
+    public String getPassport() { return passport; }
+    public void setPassport(String passport) { this.passport = passport; }
 
     @Override
     public String toString() {
-        return id + " | " + nom + " | " + email + " | Passport: " + numeroPasseport;
+        return String.format("Passager[id = %d, nom = %s, email = %s, passport = %s]", id, nom, email, passport);
     }
 }

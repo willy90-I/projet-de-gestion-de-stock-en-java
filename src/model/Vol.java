@@ -1,40 +1,53 @@
 package model;
 
-public class Vol {
-    private String numeroVol;
-    private String destination;
-    private String dateDepart;   // yyyy-MM-dd
-    private String heureDepart;  // HH:mm
-    private String heureArrivee; // HH:mm
-    private int capacite;
+import java.time.LocalDateTime;
 
-    public Vol(String numeroVol, String destination, String dateDepart,
-               String heureDepart, String heureArrivee, int capacite) {
-        this.numeroVol = numeroVol;
+public class Vol {
+    private long id;
+    private String numero;
+    private String destination;
+    private LocalDateTime depart;
+    private LocalDateTime arrivee;
+    private int capacite;
+    private int placesReservees;
+
+    public Vol() {}
+
+    public Vol(long id, String numero, String destination, LocalDateTime depart, LocalDateTime arrivee, int capacite) {
+        this.id = id;
+        this.numero = numero;
         this.destination = destination;
-        this.dateDepart = dateDepart;
-        this.heureDepart = heureDepart;
-        this.heureArrivee = heureArrivee;
+        this.depart = depart;
+        this.arrivee = arrivee;
         this.capacite = capacite;
+        this.placesReservees = 0;
     }
 
-    // getters & setters
-    public String getNumeroVol() { return numeroVol; }
-    public void setNumeroVol(String numeroVol) { this.numeroVol = numeroVol; }
+    // getters/setters
+    public long getId() { return id; }
+    public void setId(long id) { this.id = id; }
+    public String getNumero() { return numero; }
+    public void setNumero(String numero) { this.numero = numero; }
     public String getDestination() { return destination; }
     public void setDestination(String destination) { this.destination = destination; }
-    public String getDateDepart() { return dateDepart; }
-    public void setDateDepart(String dateDepart) { this.dateDepart = dateDepart; }
-    public String getHeureDepart() { return heureDepart; }
-    public void setHeureDepart(String heureDepart) { this.heureDepart = heureDepart; }
-    public String getHeureArrivee() { return heureArrivee; }
-    public void setHeureArrivee(String heureArrivee) { this.heureArrivee = heureArrivee; }
+    public LocalDateTime getDepart() { return depart; }
+    public void setDepart(LocalDateTime depart) { this.depart = depart; }
+    public LocalDateTime getArrivee() { return arrivee; }
+    public void setArrivee(LocalDateTime arrivee) { this.arrivee = arrivee; }
     public int getCapacite() { return capacite; }
     public void setCapacite(int capacite) { this.capacite = capacite; }
+    public int getPlacesReservees() { return placesReservees; }
+    public void setPlacesReservees(int placesReservees) { this.placesReservees = placesReservees; }
+
+    public int placesDisponibles() {
+        return capacite - placesReservees;
+    }
 
     @Override
     public String toString() {
-        return numeroVol + " -> " + destination + " | " + dateDepart + " " + heureDepart +
-               " - " + heureArrivee + " | Capacité: " + capacite;
+        return String.format("Vol[id = %d, num = %s, dest = %s, depart = %s, arrivee = %s, cap = %d, reserv = %d]",
+                id, numero, destination, depart, arrivee, capacite, placesReservees);
     }
 }
+
+

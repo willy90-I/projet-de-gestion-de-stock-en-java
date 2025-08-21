@@ -1,39 +1,29 @@
 package model;
 
 public class Reservation {
-    private int id;
-    private String numeroVol;
-    private int passagerId;
-    private String statut;        // ex: CONFIRME, ANNULE
-    private String dateReservation; // yyyy-MM-dd
+    public enum Statut { CONFIRMEE, ANNULEE }
 
-    public Reservation(int id, String numeroVol, int passagerId, String statut, String dateReservation) {
-        this.id = id;
-        this.numeroVol = numeroVol;
-        this.passagerId = passagerId;
-        this.statut = statut;
-        this.dateReservation = dateReservation;
+    private long id;
+    private long volId;
+    private long passagerId;
+    private Statut statut;
+
+    public Reservation() {}
+    public Reservation(long id, long volId, long passagerId, Statut statut) {
+        this.id = id; this.volId = volId; this.passagerId = passagerId; this.statut = statut;
     }
 
-    public Reservation(String numeroVol, int passagerId, String statut, String dateReservation) {
-        this(0, numeroVol, passagerId, statut, dateReservation);
-    }
-
-    // getters & setters...
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-    public String getNumeroVol() { return numeroVol; }
-    public void setNumeroVol(String numeroVol) { this.numeroVol = numeroVol; }
-    public int getPassagerId() { return passagerId; }
-    public void setPassagerId(int passagerId) { this.passagerId = passagerId; }
-    public String getStatut() { return statut; }
-    public void setStatut(String statut) { this.statut = statut; }
-    public String getDateReservation() { return dateReservation; }
-    public void setDateReservation(String dateReservation) { this.dateReservation = dateReservation; }
+    public long getId() { return id; }
+    public void setId(long id) { this.id = id; }
+    public long getVolId() { return volId; }
+    public void setVolId(long volId) { this.volId = volId; }
+    public long getPassagerId() { return passagerId; }
+    public void setPassagerId(long passagerId) { this.passagerId = passagerId; }
+    public Statut getStatut() { return statut; }
+    public void setStatut(Statut statut) { this.statut = statut; }
 
     @Override
     public String toString() {
-        return id + " | Vol: " + numeroVol + " | PassagerID: " + passagerId + " | " + statut + " | " + dateReservation;
+        return String.format("Reservation[id = %d, volId = %d, passagerId = %d, statut = %s]", id, volId, passagerId, statut);
     }
 }
-
